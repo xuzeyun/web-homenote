@@ -1,0 +1,5 @@
+# 不需要格式化的文件
+
+# Ignore artifacts:
+build
+coverage
