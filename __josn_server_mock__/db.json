@@ -1,7 +1,7 @@
 
 {
   "user": {
-    "name": "xuzeyun",
-    "sex": "man"
+    "msg": "suc",
+    "data": [1,2,3]
   }
 }

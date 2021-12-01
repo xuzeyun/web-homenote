@@ -1,0 +1,23 @@
+// .top-btn-box{
+//   margin-bottom: 10px;
+//   text-align: left;
+// }
+.form-box{
+  padding: 30px 20px 20px;
+}
+
+.g-box{
+  background-color: #fff;
+  border-radius: 5px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
+}
+
+.MuiList-root{
+  li{
+    border-bottom: 1px solid #ddd;
+    &:last-child{
+      border-bottom: none !important;
+    }
+  }
+}
