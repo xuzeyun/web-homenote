@@ -1,29 +1,17 @@
 // main
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// mui
-import {
-  Box,
-  FormControl,
-  TextField,
-  Button,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
+import { Md5 } from "ts-md5/dist/md5";
+import "./index.scss";
+import { Toast, Grid } from "antd-mobile";
+import logo from "assets/images/logo.svg";
 
 const apiUrl = process.env.REACT_APP_API_URL;
-
 interface User {
   username: string;
   nickname: string;
   password: string;
 }
-
-const testUser = {
-  username: "admin",
-  nickname: "admin@admin.com",
-  password: "123456",
-};
 
 export default function Login() {
   // 账号 昵称 密码
@@ -40,31 +28,46 @@ export default function Login() {
   const [checked, setChecked] = React.useState(true);
 
   // 提交
-  const submitHandle = () => {
-    console.log(user.username, user.nickname, user.password, checked);
+  const submitHandle = (e: any) => {
+    e.preventDefault();
+    console.log(loginState, "登录状态");
     if (loginState) {
       // 登录
-      if (
-        user.username === testUser.username &&
-        user.password === testUser.password
-      ) {
-        // 登录成功
-        alert("登录成功");
-        setLoginState(true);
-      } else {
-        // 登录失败
-        alert("用户名或密码错误");
-      }
-    } else {
-      // 注册
+      let md5 = Md5.hashStr(user.password);
+      let data = {
+        username: user.username,
+        password: md5,
+      };
+      console.log(data, "data");
       axios
-        .post(`${apiUrl}/user/save`, user)
+        .post(`${apiUrl}/user/login`, data)
         .then((res) => res.data)
         .then((res) => {
           if (res.success) {
-            alert(res.msg);
+            Toast.show({ icon: "success", content: res.msg });
           } else {
-            alert(res.msg);
+            Toast.show({ icon: "fail", content: res.msg });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      // 注册
+      let md5 = Md5.hashStr(user.password);
+      let data = {
+        username: user.username,
+        nickname: user.nickname,
+        password: md5,
+      };
+      axios
+        .post(`${apiUrl}/user/save`, data)
+        .then((res) => res.data)
+        .then((res) => {
+          if (res.success) {
+            Toast.show({ icon: "success", content: res.msg });
+          } else {
+            Toast.show({ icon: "fail", content: res.msg });
           }
         })
         .catch((err) => {
@@ -83,73 +86,76 @@ export default function Login() {
   };
 
   return (
-    <Box
-      component="form"
-      noValidate
-      autoComplete="off"
-      sx={{ padding: "160px 50px 0" }}
-    >
-      {/* 用户名 */}
-      <FormControl fullWidth sx={{ marginBottom: "20px" }}>
-        <TextField
-          id="username"
-          label="用户名"
-          variant="standard"
-          value={user.username}
-          onChange={(e) => setUser({ ...user, username: e.target.value })}
-          required
-        />
-      </FormControl>
+    <Grid columns={1} gap={8}>
+      <div className="logo">
+        <img src={logo} alt="24G Logo"></img>
+      </div>
+      <form>
+        <div className="form-main-box">
+          {/* 用户名 */}
+          <div className="form-group">
+            <label htmlFor="username">用户名</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              value={user.username}
+              onChange={(e) => setUser({ ...user, username: e.target.value })}
+            />
+          </div>
+          {/* 昵称 - 注册 */}
+          {!loginState ? (
+            <div className="form-group">
+              <label htmlFor="nickname">昵称</label>
+              <input
+                type="text"
+                name="nickname"
+                id="nickname"
+                value={user.nickname}
+                onChange={(e) => setUser({ ...user, nickname: e.target.value })}
+              />
+            </div>
+          ) : (
+            <div></div>
+          )}
+          {/* 密码 */}
+          <div className="form-group">
+            <label htmlFor="password">密码</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
+            />
+          </div>
+        </div>
 
-      {/* 昵称 - 注册 */}
-      {!loginState ? (
-        <FormControl fullWidth sx={{ marginBottom: "20px" }}>
-          <TextField
-            id="nickname"
-            label="昵称"
-            variant="standard"
-            value={user.nickname}
-            onChange={(e) => setUser({ ...user, nickname: e.target.value })}
-            required
-          />
-        </FormControl>
-      ) : (
-        <div></div>
-      )}
+        {/* 登录按钮 */}
+        <div className="form-group">
+          <button onClick={submitHandle}>
+            {loginState ? "登 录" : "注 册"}
+          </button>
+        </div>
 
-      {/* 密码 */}
-      <FormControl fullWidth sx={{ marginBottom: "40px" }}>
-        <TextField
-          id="password"
-          label="密码"
-          variant="standard"
-          type="password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
-          required
-        />
-      </FormControl>
-
-      {/* 登录按钮 */}
-      <FormControl fullWidth sx={{ marginBottom: "20px" }}>
-        <Button variant="contained" onClick={submitHandle}>
-          {loginState ? "登 录" : "注 册"}
-        </Button>
-      </FormControl>
-
-      {/* 记住密码 */}
-      <FormControlLabel
-        checked={checked}
-        onChange={(e) => changeHandle(e)}
-        defaultChecked
-        label="Label"
-        control={<Checkbox />}
-      />
-
-      {/* 登录|注册 切换 */}
-      <Button variant="outlined" sx={{ float: "right" }} onClick={regHandle}>
-        {!loginState ? "登 录" : "注 册"}
-      </Button>
-    </Box>
+        {/* 记住密码 */}
+        <div className="form-group">
+          <div className="left">
+            <input
+              type="checkbox"
+              name="re-password"
+              id="re-password"
+              checked={checked}
+              onChange={(e) => changeHandle(e)}
+            />
+            <label htmlFor="re-password">记住密码</label>
+          </div>
+          <div className="right">
+            {/* 登录|注册 切换 */}
+            <span onClick={regHandle}>{!loginState ? "登 录" : "注 册"}</span>
+          </div>
+        </div>
+      </form>
+    </Grid>
   );
 }
