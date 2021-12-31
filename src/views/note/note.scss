@@ -1,0 +1,69 @@
+.year-wrap{
+  border: 0.03rem #f8c96b solid;
+  padding: 0.12rem;
+  border-radius: 0.1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 0.1rem;
+  grid-column-gap: 0.1rem;
+  .month-wrap{
+    h5{
+      font-size: 0.16rem;
+      margin-bottom: 0.02rem;
+      color: #f8c96b;
+    }
+    ul{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-row-gap: 0.04rem;
+      grid-column-gap: 0.04rem;
+      list-style: none;
+      li{
+        border-radius: 0.03rem;
+        height: 0.18rem;
+        line-height: 0.18rem;
+        background: #80c0aa;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+      }
+      .null{
+        opacity: 0;
+      }
+    }
+    
+  }
+}
+
+.line-wrap{
+  display: grid;
+  grid-template-columns: 1fr 0.04rem 2.5fr;
+  grid-row-gap: 0;
+  grid-column-gap: 0.1rem;
+  .date{
+    font-size: 0.16rem;
+    color: #fff;
+  }
+  .line{
+    position: relative;
+    background: #f8c96b;
+    &:before{
+      content: '';
+      margin: 0.08rem 0 0 -0.04rem;
+      display: block;
+      width: 0.04rem;
+      height: 0.04rem;
+      background: #3f9292;
+      border: #f8c96b 0.04rem solid;
+
+    }
+  }
+  .cont{
+    color: #f8c96b;
+    padding: 0 0 0.2rem 0.1rem;
+    box-sizing: border-box;
+    p {
+      font-size: 0.14rem;
+    }
+  }
+}

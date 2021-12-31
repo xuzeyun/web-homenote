@@ -1,5 +1,14 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "styles/form.scss";
 
+@font-face {
+  font-family: myFont;
+  src: url(assets/fonts/my.ttf);
+}
+
+html{
+  font-size:100px;
+}
 body {
   margin: 0;
   // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -8,15 +17,167 @@ body {
   font-family: PingFangSC-Regular, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #3f9292 url(assets/images/bg.png) no-repeat !important;
-  background-size: cover;
-  font-size: 20px;
+  background-color: #3f9292;
 }
+.clearfix:after{content:" "; clear:both; height:0; visibility:hidden; display:block;}
+.clearfix{*zoom:1;}
 
-button {
-  font-family: PingFangSC-Regular, sans-serif !important;
+ul, li, ol, p, h1, h2, h3, h4, h5, h6, dl, dt, dd{
+  margin: 0; padding: 0;
+  font-size: 0.12rem;
+}
+a{
+  text-decoration: none;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+// ================================= 公共样式 =================================
+// 模块统一间距
+.g-bottom{
+  margin-bottom: 0.1rem;
+}
+
+// 配色
+.primary{
+  color: #1E4F8D;
+}
+.error{
+  color: #F24C4A;
+}
+.btn-info{
+  background: #FFF6E7;
+}
+
+.top-tabs{
+  color: #FFF6E7;
+  font-size: 0.16rem;
+  text-align: center;
+  margin-bottom: 0.15rem;
+  .span-wrap{
+    display: inline-block;
+    background-color: #FFF6E7;  
+    padding: 0.02rem 0.1rem;
+  }
+  span{
+    display: inline-block;
+    border: #FFF6E7 0.01rem solid;
+    padding: 0rem 0.1rem;
+    line-height: 0.22rem;
+    color: #000;
+    font-family: myFont;
+  }
+  .active{
+    background-color: #ffdf9a;
+    // color: #0;
+  }
+  .orn{
+    display: inline-block;
+    padding: 0;
+    width: 0.12rem;
+    height: 0.37rem;
+    border: none;
+    background: red;
+    vertical-align: middle;
+    position: relative;
+  }
+  .orn-left{
+    background: url('/assets/images/tabs_left_bg.png') no-repeat;
+    background-size: 100% 100%;
+    margin-right: -0.05rem;
+  }
+  .orn-right{
+    background: url('/assets/images/tabs_right_bg.png') no-repeat;
+    background-size: 100%;
+    margin-left: -0.05rem;
+  }
+}
+.top-btns{
+  color: #FFF6E7;
+  font-size: 0.16rem;
+  text-align: right;
+}
+
+// 弹窗
+.g-dialog{
+  position: fixed;
+  background: #3f9292;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: auto;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  padding: 0.3rem;
+  .title{
+    height: 0.3rem;
+    line-height: 0.3rem;
+    font-size: 0.24rem;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.2rem;
+    .name{
+      margin: 0 0.2rem;
+    }
+    .left, .right{
+      width: 0.7rem;
+      height: 0.22rem;
+      background-size: 100%;
+      background-repeat: no-repeat;
+    }
+    .left{
+      background-image: url('/assets/images/dialog_title_left_bg.png');
+    }
+    .right{
+      background-image: url('/assets/images/dialog_title_right_bg.png');
+    }
+
+    
+    // dialog_title_left_bg
+  }
+}
+
+// 滚动区域
+.g-wrap{
+  // padding: 0.3rem;
+}
+
+// 头部用户信息
+.top-bar{
+  height: 0.91rem;
+  background: url('/assets/images/topbar_bg.png') no-repeat;
+  background-size: 100%;
+  padding-top: 0.43rem;
+  .logo{
+    margin: 0 auto;
+    width: 0.83rem;
+    height: 0.24rem;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.bottom-nav{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFF6E7;
+  border-top: 0.03rem solid #3f9292;
+  padding-bottom: 0.2rem;
+  .adm-tab-bar-item-active{
+    i{
+      color: #3f9292;
+    }
+    .adm-tab-bar-item-title{
+      color: #3f9292;
+    }
+  }
 }

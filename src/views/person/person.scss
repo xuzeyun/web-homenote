@@ -1,0 +1,40 @@
+.login-tool{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: myFont;
+  margin-bottom: 0.2rem;
+  .fas{
+    margin:0 0.1rem;
+  }
+  .avatar{
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #F8C96B;
+    margin: 0 0.2rem;
+  }
+  a{
+    font-size: 0.24rem;
+    color: #F8C96B;
+  }
+}
+.user-info{
+  text-align: center;
+  color: #F8C96B;
+  dl{
+    margin-bottom: 0.2rem;
+    line-height: 0.3rem;
+    font-size: 0.2rem;
+    dt{
+      font-weight: bold;
+      font-size: 0.2rem;
+      padding: 0 0.5rem;
+      color: #fff;
+      font-family: myFont;
+    }
+  }
+  button{
+    display: inline-block;
+  }
+}

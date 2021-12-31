@@ -1,4 +1,26 @@
 .logo{
-  margin: 4rem 0 1rem;
+  margin: 0.8rem 0 0;
   text-align: center;
+}
+.left, .right{
+  line-height: 0.3rem;
+}
+.left{
+  float: left;
+  input[type="checkbox"]{
+    width: 0.16rem;
+    height: 0.16rem;
+    border: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0;
+    margin-right: 0.05rem;
+  }
+}
+.right{
+  float: right;
+  span{
+    color: #fff;
+    cursor: pointer;
+  }
 }

@@ -1,187 +1,195 @@
-// // main
+// main
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// // mui
-// import {
-//   List,
-//   ListItem,
-//   ListItemText,
-//   ListItemAvatar,
-//   Avatar,
-//   IconButton,
-//   Button,
-//   Box,
-//   Pagination,
-// } from "@mui/material";
-// // icon
-// import PersonIcon from "@mui/icons-material/Person";
-// import AddIcon from "@mui/icons-material/Add";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import EditIcon from "@mui/icons-material/Edit";
-// // import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
-// import GroupAddIcon from "@mui/icons-material/GroupAdd";
-// // service
-// import AddDialog from "./add-dialog";
-// import XMassage from "components/x-massage/index";
-// import "./index.scss";
-// const apiUrl = process.env.REACT_APP_API_URL;
+import axios from "axios";
+import { Toast, Grid, Dialog, FloatingBubble } from "antd-mobile";
+import "styles/form.scss";
 
-// // ts
-// interface Member {
-//   id: String;
-//   name: String;
-//   nickname: String;
-//   sex: Number;
-//   birthday: Date;
-//   life: Number;
-//   zodiac: String;
-//   constellation: String;
-//   occupation: String;
-//   interest: String;
-//   contact: String;
-//   intro: String;
-// }
+// service
+import AddDialog from "./add-dialog";
+import "./index.scss";
+const apiUrl = process.env.REACT_APP_API_URL;
 
-// export default function MemberList() {
-//   // 列表信息
-//   const [list, setList] = useState([]);
-//   // 弹窗显示隐藏
-//   const [isModalVisible, setIsModalVisible] = useState(false);
-//   // 当前行信息
-//   const [curRow, setCurRow] = useState({});
-//   const [type, setType] = useState(1);
+// ts
+interface Member {
+  id: String;
+  name: String;
+  nickname: String;
+  sex: Number;
+  birthday: Date;
+  life: Number;
+  zodiac: String;
+  constellation: String;
+  occupation: String;
+  interest: String;
+  contact: String;
+  intro: String;
+}
 
-//   useEffect(() => {
-//     // 请求列表
-//     getList();
-//   }, []);
+export default function MemberList() {
+  // 列表信息
+  const [list, setList] = useState([]);
+  // 弹窗显示隐藏
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // 当前行信息
+  const [curRow, setCurRow] = useState({});
+  const [type, setType] = useState(1);
 
-//   // 关闭弹窗
-//   const closeModel = () => {
-//     setIsModalVisible(false);
-//     setCurRow({});
-//   };
+  useEffect(() => {
+    // 请求列表
+    getList();
+  }, []);
 
-//   // 请求列表
-//   const getList = () => {
-//     axios
-//       .get(`${apiUrl}/member/list?name=`)
-//       .then((res) => res.data)
-//       .then((res) => {
-//         setList(res.data);
-//       });
-//   };
+  // 关闭弹窗
+  const closeModel = () => {
+    setIsModalVisible(false);
+    setCurRow({});
+  };
 
-//   // 修改
-//   const editHandel = (row: Member) => {
-//     setType(2);
-//     setCurRow(row);
-//     setIsModalVisible(true);
-//   };
+  // 请求列表
+  const getList = () => {
+    axios
+      .get(`${apiUrl}/member/list?name=`)
+      .then((res) => res.data)
+      .then((res) => {
+        res.data.forEach((item: any) => {
+          item.birthday = item.birthday.substring(0, 10);
+        });
+        setList(res.data);
+      });
+  };
 
-//   // 详情
-//   const viewHandle = (row: Member) => {
-//     // setType(3)
-//     // viewHandle(row);
-//     // setIsModalVisible(true);
-//   };
+  // 修改
+  const editHandel = (row: Member) => {
+    setType(2);
+    setCurRow(row);
+    setIsModalVisible(true);
+  };
 
-//   // 删除
-//   const deleteHandel = (id: string) => {
-//     axios
-//       .delete(`${apiUrl}/member/delete/` + id)
-//       .then((res) => res.data)
-//       .then((res) => {
-//         if (res.success) {
-//           openMassage("success", res.msg);
-//           getList();
-//         } else {
-//           openMassage("error", res.msg);
-//         }
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   };
+  // 详情
+  const viewHandle = (row: Member) => {
+    // setType(3)
+    // viewHandle(row);
+    // setIsModalVisible(true);
+  };
 
-//   const [msgOpen, setMsgOpen] = useState(false);
-//   const [msgType, setMsgType] = useState("info");
-//   const [msgMsg, setMsgMsg] = useState("info");
-//   const openMassage = (type: string, msg: string) => {
-//     setMsgOpen(true);
-//     setMsgType("success");
-//     setMsgMsg(msg);
-//   };
-//   const closeMassage = () => {
-//     setMsgOpen(false);
-//   };
+  // 删除
+  const deleteHandel = async (id: string) => {
+    const result = await Dialog.confirm({
+      content: "确认要删除此条数据？",
+    });
+    if (result) {
+      axios
+        .delete(`${apiUrl}/member/delete/` + id)
+        .then((res) => res.data)
+        .then((res) => {
+          if (res.success) {
+            Toast.show({ icon: "success", content: res.msg });
+            getList();
+          } else {
+            Toast.show({ icon: "fail", content: res.msg });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      Toast.show({ content: "已取消", position: "bottom" });
+    }
+  };
 
-//   const listItems = list.map((member: any, index: number) => (
-//     <ListItem
-//       key={index}
-//       className="list-bottom-border"
-//       onClick={() => {
-//         viewHandle(member);
-//       }}
-//       secondaryAction={
-//         <IconButton edge="end">
-//           <EditIcon onClick={() => editHandel(member)} color="primary" />
-//           <DeleteIcon onClick={() => deleteHandel(member.id)} color="error" />
-//         </IconButton>
-//         // <IconButton edge="end" aria-label="delete" color="">
+  // li demo
+  const listItems = list.map((member: any, index: number) => (
+    <li
+      key={index}
+      onClick={() => {
+        viewHandle(member);
+      }}
+    >
+      <div className="border-box">
+        <div className="border-box2 clearfix">
+          <h3>{member.name}</h3>
+          <div className="tool-box">
+            <i
+              className="fas fa-pen primary"
+              onClick={() => editHandel(member)}
+            ></i>
+            <i
+              className="fas fa-trash error"
+              onClick={() => deleteHandel(member.id)}
+            ></i>
+          </div>
+          <p>
+            <span>别名：{member.nickname}</span>
+            <br />
+            <span>性别：{member.sex === 1 ? "男" : "女"}</span>
+            <br />
+            <span>生辰：{member.birthday}</span>
+            <br />
+            <span>生死：{member.life === 1 ? "生" : "死"}</span>
+            <br />
+            <span>生肖：{member.zodiac}</span>
+            <br />
+            <span>星座：{member.constellation}</span>
+            <br />
+            <span>行当：{member.occupation}</span>
+            <br />
+            <span>通讯：{member.contact}</span>
+            <br />
+            <span>志趣：{member.interest}</span>
+            <br />
+            <span>简介：{member.intro}</span>
+          </p>
+        </div>
+      </div>
+    </li>
+  ));
 
-//         // </IconButton>
-//       }
-//     >
-//       <ListItemAvatar>
-//         <Avatar>
-//           <PersonIcon />
-//         </Avatar>
-//       </ListItemAvatar>
-//       <ListItemText primary={member.name} secondary={member.intro} />
-//     </ListItem>
-//   ));
+  const addDialog = isModalVisible ? (
+    <AddDialog
+      type={type}
+      closeModel={closeModel}
+      getList={getList}
+      curRow={curRow}
+    ></AddDialog>
+  ) : null;
 
-//   return (
-//     <div>
-//       {/* 新增 */}
-//       <Box mb={1.5}>
-//         <Button
-//           variant="contained"
-//           startIcon={<GroupAddIcon />}
-//           onClick={() => {
-//             setIsModalVisible(true);
-//             setType(1);
-//           }}
-//         >
-//           载入成员
-//         </Button>
-//       </Box>
-//       <Box mb={1.5} className="g-box">
-//         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-//           {listItems}
-//         </List>
-//       </Box>
-//       <Box>
-//         <Pagination count={10} color="primary" />
-//       </Box>
-//       <AddDialog
-//         isModalVisible={isModalVisible}
-//         type={type}
-//         closeModel={closeModel}
-//         getList={getList}
-//         curRow={curRow}
-//       ></AddDialog>
-//       {msgOpen ? (
-//         <XMassage
-//           type={msgType}
-//           open={msgOpen}
-//           msg={msgMsg}
-//           emitClose={closeMassage}
-//         ></XMassage>
-//       ) : (
-//         ""
-//       )}
-//     </div>
-//   );
-// }
+  return (
+    <div>
+      {/* 新增 */}
+      {/* <div className="g-bottom top-btns">
+        <i
+          className="fas fa-user-plus"
+          onClick={() => {
+            setIsModalVisible(true);
+            setType(1);
+          }}>
+        </i>
+      </div> */}
+      <div className="g-wrap clearfix">
+        <div className="card-list">
+          <ul>{listItems}</ul>
+        </div>
+      </div>
+
+      {/* 分页 */}
+      <div></div>
+      {/* 弹窗 */}
+      {addDialog}
+
+      <FloatingBubble
+        style={{
+          "--initial-position-bottom": "1.5rem",
+          "--initial-position-right": "0.1rem",
+          // '--edge-distance': '0.1rem',
+        }}
+        onClick={() => {
+          setIsModalVisible(true);
+          setType(1);
+        }}
+      >
+        <i className="fas fa-user-plus"></i>
+        {/* <MessageFill fontSize={32} /> */}
+      </FloatingBubble>
+    </div>
+  );
+}

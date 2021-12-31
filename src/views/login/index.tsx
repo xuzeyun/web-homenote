@@ -1,25 +1,33 @@
 // main
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Md5 } from "ts-md5/dist/md5";
 import "./index.scss";
 import { Toast, Grid } from "antd-mobile";
 import logo from "assets/images/logo.svg";
+import UserContext from "context/UserContext";
+import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 interface User {
+  id: string;
   username: string;
   nickname: string;
   password: string;
+  token: string;
 }
 
 export default function Login() {
+  let navigate = useNavigate();
   // 账号 昵称 密码
   const [user, setUser] = useState({
     username: "",
     nickname: "",
     password: "",
   });
+
+  // @ts-ignore
+  const { userInfo, setUserInfo } = useContext(UserContext);
 
   // true 登录 false 注册
   const [loginState, setLoginState] = useState(true);
@@ -45,6 +53,22 @@ export default function Login() {
         .then((res) => {
           if (res.success) {
             Toast.show({ icon: "success", content: res.msg });
+            // 登录成功后跳转路由，存储登录信息
+            // data: {
+            //   id: "5f35461d98ac4506b8c01b4ad280d817"
+            //   nickname: "123"
+            //   token: "ffe1061786aa46cfaa07046f41d974f7"
+            //   username: "test"
+            // }
+            // msg: "登录成功"
+            // success: true
+            // const ThemeContext = React.createContext('light');
+            // setUserInfo(res.data);
+            // JSON.stringify(userInfo);
+            setUserInfo({ ...res.data });
+            console.log(userInfo, "userInfo");
+            // 页面跳转
+            navigate("/person");
           } else {
             Toast.show({ icon: "fail", content: res.msg });
           }
@@ -66,6 +90,7 @@ export default function Login() {
         .then((res) => {
           if (res.success) {
             Toast.show({ icon: "success", content: res.msg });
+            // 注册成功
           } else {
             Toast.show({ icon: "fail", content: res.msg });
           }
@@ -115,9 +140,7 @@ export default function Login() {
                 onChange={(e) => setUser({ ...user, nickname: e.target.value })}
               />
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
           {/* 密码 */}
           <div className="form-group">
             <label htmlFor="password">密码</label>
@@ -129,30 +152,29 @@ export default function Login() {
               onChange={(e) => setUser({ ...user, password: e.target.value })}
             />
           </div>
-        </div>
 
-        {/* 登录按钮 */}
-        <div className="form-group">
-          <button onClick={submitHandle}>
-            {loginState ? "登 录" : "注 册"}
-          </button>
-        </div>
-
-        {/* 记住密码 */}
-        <div className="form-group">
-          <div className="left">
-            <input
-              type="checkbox"
-              name="re-password"
-              id="re-password"
-              checked={checked}
-              onChange={(e) => changeHandle(e)}
-            />
-            <label htmlFor="re-password">记住密码</label>
+          {/* 登录按钮 */}
+          <div className="form-group btns-wrap">
+            <button className="fullWidth" onClick={submitHandle}>
+              {loginState ? "登 录" : "注 册"}
+            </button>
           </div>
-          <div className="right">
-            {/* 登录|注册 切换 */}
-            <span onClick={regHandle}>{!loginState ? "登 录" : "注 册"}</span>
+          {/* 记住密码 */}
+          <div className="form-group">
+            <div className="left">
+              <input
+                type="checkbox"
+                name="re-password"
+                id="re-password"
+                checked={checked}
+                onChange={(e) => changeHandle(e)}
+              />
+              <label htmlFor="re-password">记住密码</label>
+            </div>
+            <div className="right">
+              {/* 登录|注册 切换 */}
+              <span onClick={regHandle}>{!loginState ? "登 录" : "注 册"}</span>
+            </div>
           </div>
         </div>
       </form>
